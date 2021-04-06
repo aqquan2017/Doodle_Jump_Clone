@@ -70,7 +70,9 @@ public class Platform : MonoBehaviour {
             {
                 Vector2 Force = Rigid.velocity;
                 Force.y = Jump_Force;
-                Rigid.velocity = Force;
+                //Rigid.velocity = Force;
+                Rigid.AddForce(Force * 10000000000, ForceMode2D.Impulse);
+                print("ADD FORCE");
 
                 // Play jump sound
                 GetComponent<AudioSource>().Play();
