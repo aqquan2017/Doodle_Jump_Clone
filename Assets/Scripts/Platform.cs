@@ -62,7 +62,7 @@ public class Platform : MonoBehaviour {
 	void OnCollisionEnter2D(Collision2D Other)
     {
         // Add force when player fall from top
-        if (-Other.relativeVelocity.y <= 0f)
+        if (Other.relativeVelocity.y <= 0f)
         {
             Rigidbody2D Rigid = Other.collider.GetComponent<Rigidbody2D>();
 
@@ -70,9 +70,7 @@ public class Platform : MonoBehaviour {
             {
                 Vector2 Force = Rigid.velocity;
                 Force.y = Jump_Force;
-                //Rigid.velocity = Force;
-                Rigid.AddForce(Force * 10000000000, ForceMode2D.Impulse);
-                print("ADD FORCE");
+                Rigid.velocity = Force;
 
                 // Play jump sound
                 GetComponent<AudioSource>().Play();

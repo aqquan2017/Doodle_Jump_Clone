@@ -62,6 +62,7 @@ public class File_Manager : MonoBehaviour {
         string[] Data = new string[1];
         Data[0] = System.Convert.ToBase64String(Byte_Data);
 
+        print(File_Path + " VS " +Data);
         File.WriteAllLines(File_Path, Data);
     }
 }

@@ -24,8 +24,27 @@ public class Player_Controller : MonoBehaviour {
     {
         // Set Movement value
         //Movement = Input.acceleration.x * Movement_Speed; 
+
+#if UNITY_EDITOR
         Movement = Input.GetAxis("Horizontal") * Movement_Speed; //Input.acceleration.x * Movement_Speed;
-        
+#endif
+
+#if UNITY_ANDROID
+        if (Input.touchCount > 0)
+        {
+            print("TEST");
+            var touch = Input.GetTouch(0);
+            if (touch.position.x < Screen.width / 2)
+            {
+                Movement = -Movement_Speed;
+            }
+            else if (touch.position.x > Screen.width / 2)
+            {
+                Movement = Movement_Speed;
+            }
+        }
+#endif
+
         // Player look right or left
         if (Movement > 0)
             transform.localScale = new Vector3(Player_LocalScale.x, Player_LocalScale.y, Player_LocalScale.z);

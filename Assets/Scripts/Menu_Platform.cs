@@ -9,7 +9,7 @@ public class Menu_Platform : MonoBehaviour {
     void OnCollisionEnter2D(Collision2D Other)
     {
         // Add force when player fall from top
-        if (-Other.relativeVelocity.y <= 0f)
+        if (Other.relativeVelocity.y <= 0f)
         {
             Rigidbody2D Rigid = Other.collider.GetComponent<Rigidbody2D>();
 
