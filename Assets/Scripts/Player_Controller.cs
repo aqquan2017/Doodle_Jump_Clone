@@ -30,6 +30,8 @@ public class Player_Controller : MonoBehaviour {
 #endif
 
 #if UNITY_ANDROID
+        print("IN MOBILE MODE");
+        Movement = 0;
         if (Input.touchCount > 0)
         {
             print("TEST");
