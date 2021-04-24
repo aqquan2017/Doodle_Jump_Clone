@@ -21,9 +21,13 @@ public class Game_Controller : MonoBehaviour {
     public Text Txt_GameOverScore;
     public Text Txt_GameOverHighsocre;
 
+    private AudioSource audioSource;
+
 	void Awake () 
     {
         Player = GameObject.Find("Doodler");
+
+        audioSource = GetComponent<AudioSource>();
 
         // Initialize boundary 
         Camera_Pos = Camera.main.transform.position;
@@ -44,7 +48,7 @@ public class Game_Controller : MonoBehaviour {
             if (Player.transform.position.y - Camera.main.transform.position.y < Get_DestroyDistance())
             {
                 // Play game over sound
-                GetComponent<AudioSource>().Play();
+                audioSource.Play();
                 
                 // Set game over
                 Set_GameOver();

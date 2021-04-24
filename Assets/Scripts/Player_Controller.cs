@@ -12,10 +12,18 @@ public class Player_Controller : MonoBehaviour {
 
     public Sprite[] Spr_Player = new Sprite[2];
 
+    private Sprite playerSprite;
+    private BoxCollider2D boxCollider;
+
+    //Touch or use acceleration
+    public bool isTouch = true;
+
 	// Use this for initialization
 	void Start () 
     {
+        boxCollider = GetComponent<BoxCollider2D>();
         Rigid = GetComponent<Rigidbody2D>();
+        playerSprite = GetComponent<SpriteRenderer>().sprite;
         Player_LocalScale = transform.localScale;
 	}
 	
@@ -23,28 +31,34 @@ public class Player_Controller : MonoBehaviour {
 	void Update () 
     {
         // Set Movement value
-        //Movement = Input.acceleration.x * Movement_Speed; 
-
 #if UNITY_EDITOR
-        Movement = Input.GetAxis("Horizontal") * Movement_Speed; //Input.acceleration.x * Movement_Speed;
-#endif
+        Movement = Input.GetAxis("Horizontal") * Movement_Speed; 
 
-#if UNITY_ANDROID
-        print("IN MOBILE MODE");
-        Movement = 0;
-        if (Input.touchCount > 0)
+#elif UNITY_ANDROID
+        Debug.LogError("ANDROID");
+        if (isTouch)
         {
-            print("TEST");
-            var touch = Input.GetTouch(0);
-            if (touch.position.x < Screen.width / 2)
+            Movement = 0;
+            if (Input.touchCount > 0)
             {
-                Movement = -Movement_Speed;
-            }
-            else if (touch.position.x > Screen.width / 2)
-            {
-                Movement = Movement_Speed;
+                print("Touch");
+                var touch = Input.GetTouch(0);
+                if (touch.position.x < Screen.width / 2)
+                {
+                    Movement = -Movement_Speed;
+                }
+                else if (touch.position.x > Screen.width / 2)
+                {
+                    Movement = Movement_Speed;
+                }
             }
         }
+        else
+        {
+            //acceleation
+            Movement = Input.acceleration.x* Movement_Speed;
+        }
+
 #endif
 
         // Player look right or left
@@ -64,20 +78,20 @@ public class Player_Controller : MonoBehaviour {
         // Player change sprite
         if (Velocity.y < 0)
         {
-            GetComponent<SpriteRenderer>().sprite = Spr_Player[0];
+            playerSprite = Spr_Player[0];
 
             // Active player collider
-            GetComponent<BoxCollider2D>().enabled = true;
+            boxCollider.enabled = true;
 
             // Fall propeller after fly up
             Propeller_Fall();
         }
         else
         {
-            GetComponent<SpriteRenderer>().sprite = Spr_Player[1];
+            playerSprite = Spr_Player[1];
 
             // Deactive player collider
-            GetComponent<BoxCollider2D>().enabled = false;
+            boxCollider.enabled = false;
         }
 
         // Player wrap
