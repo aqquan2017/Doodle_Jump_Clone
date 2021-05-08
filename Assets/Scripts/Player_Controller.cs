@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class Player_Controller : MonoBehaviour {
 
@@ -113,4 +114,11 @@ public class Player_Controller : MonoBehaviour {
             transform.GetChild(0).parent = null;
         }
     }
+
+    public void PlayerRotate360(float totalTime, int degTotal) 
+    {
+        transform.DORotate(Vector3.forward * degTotal, totalTime, RotateMode.FastBeyond360);
+    }
+
+    
 }

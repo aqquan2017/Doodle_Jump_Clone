@@ -1,12 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class Platform : MonoBehaviour {
 
     public float Jump_Force = 10f;
-    private float Destroy_Distance;
-    private bool Create_NewPlatform = false;
+    [SerializeField] private float Destroy_Distance;
+    [SerializeField] private bool Create_NewPlatform = false;
 
     private GameObject Game_Controller;
 
@@ -16,7 +17,8 @@ public class Platform : MonoBehaviour {
         Game_Controller = GameObject.Find("Game_Controller");
 
         // Set distance to destroy the platforms out of screen
-        Destroy_Distance = Game_Controller.GetComponent<Game_Controller>().Get_DestroyDistance();
+        if(Game_Controller != null)
+            Destroy_Distance = Game_Controller.GetComponent<Game_Controller>().Get_DestroyDistance();
     }
 
     void FixedUpdate()
@@ -25,7 +27,7 @@ public class Platform : MonoBehaviour {
         if (transform.position.y - Camera.main.transform.position.y < Destroy_Distance)
         {
             // Create new platform
-            if (name != "Platform_Brown(Clone)" && name != "Spring(Clone)" && name != "Trampoline(Clone)" && !Create_NewPlatform)
+            if (Game_Controller != null && name != "Platform_Brown(Clone)" && name != "Spring(Clone)" && name != "Trampoline(Clone)" && !Create_NewPlatform)
             {
                 Game_Controller.GetComponent<Platform_Generator>().Generate_Platform(1);
                 Create_NewPlatform = true;
@@ -64,7 +66,8 @@ public class Platform : MonoBehaviour {
         // Add force when player fall from top
         if (Other.relativeVelocity.y <= 0f)
         {
-            Rigidbody2D Rigid = Other.collider.GetComponent<Rigidbody2D>();
+            Rigidbody2D Rigid = Other.rigidbody;
+
 
             if (Rigid != null)
             {
@@ -82,14 +85,32 @@ public class Platform : MonoBehaviour {
                 // Check platform type
                 Platform_Type();
             }
+
+            //Check Trampoline => rotate player 360 deg
+            if (this.name == "Trampoline(Clone)")
+            {
+                Player_Controller player = Other.gameObject.GetComponent<Player_Controller>();
+
+                if (player != null)
+                {
+                    player.PlayerRotate360(1.5f, 360);
+                }
+            }
+
+            //bounce the "Platform_Brown(Clone)" 
+            if (name == "Platform_Green(Clone)")
+            {
+                transform.DOMoveY(transform.position.y - 0.3f, 0.2f).
+                    OnComplete( ()=> transform.DOMoveY(transform.position.y + 0.3f, 0.2f) );
+            }
         }
     }
 
     void Platform_Type()
     {
-        if (GetComponent<Platform_White>())
-            GetComponent<Platform_White>().Deactive();
-        else if (GetComponent<Platform_Brown>())
-            GetComponent<Platform_Brown>().Deactive();
+        if (TryGetComponent(out Platform_White c))
+            c.Deactive();
+        else if (TryGetComponent(out Platform_Brown d))
+            d.Deactive();
     }
 }

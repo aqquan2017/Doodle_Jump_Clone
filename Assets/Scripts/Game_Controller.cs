@@ -25,6 +25,8 @@ public class Game_Controller : MonoBehaviour {
 
 	void Awake () 
     {
+        Application.targetFrameRate = 60;
+
         Player = GameObject.Find("Doodler");
 
         audioSource = GetComponent<AudioSource>();
