@@ -15,7 +15,7 @@ public class Button_OnClick : MonoBehaviour {
 
     public void Scores_OnClick()
     {
-        GameObject MainMenu_Canvas = GameObject.Find("Game_Controller");
+        GameObject MainMenu_Canvas = GameObject.Find("Game_Controller1");
 
         // Active highscore menu
         MainMenu_Canvas.GetComponent<Submit_Score>().HighScore_Canvas.SetActive(true);

@@ -25,6 +25,7 @@ public class DynamicObjectPool : ObjectPool {
         SpawnNObjs(startingSizeOfPool);
     }
 
+
     public override GameObject Spawn(Vector3 pos, Quaternion rot, Transform parent = null){
         if(pool.Count == 0){
             GameObject spawned1 = Instantiate(prefab, pos, rot, parent);

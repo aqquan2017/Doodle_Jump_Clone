@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using TheDeveloper.AdvancedObjectPool;
 
 public class Platform : MonoBehaviour {
 
@@ -10,15 +11,35 @@ public class Platform : MonoBehaviour {
     [SerializeField] private bool Create_NewPlatform = false;
 
     private GameObject Game_Controller;
+    private Platform_Generator platform_Generator;
+    private Animator animator;
+    private AudioSource audioSource;
+    private ObjectPool objectPool;
 
     // Use this for initialization
     void Start()
     {
         Game_Controller = GameObject.Find("Game_Controller");
+        platform_Generator = Game_Controller.GetComponent<Platform_Generator>();
+        audioSource = GetComponent<AudioSource>();
 
         // Set distance to destroy the platforms out of screen
-        if(Game_Controller != null)
+        if (Game_Controller != null)
             Destroy_Distance = Game_Controller.GetComponent<Game_Controller>().Get_DestroyDistance();
+
+        animator = GetComponent<Animator>();
+        animator.keepAnimatorControllerStateOnDisable = true;
+    }
+
+    private void OnEnable()
+    {
+        Create_NewPlatform = false;
+        
+        if(animator != null)
+        {
+            animator.SetBool("Active", false);
+            
+        }
     }
 
     void FixedUpdate()
@@ -29,34 +50,50 @@ public class Platform : MonoBehaviour {
             // Create new platform
             if (Game_Controller != null && name != "Platform_Brown(Clone)" && name != "Spring(Clone)" && name != "Trampoline(Clone)" && !Create_NewPlatform)
             {
-                Game_Controller.GetComponent<Platform_Generator>().Generate_Platform(1);
+                platform_Generator.Generate_Platform(1);
                 Create_NewPlatform = true;
             }
             
             // Deactive Collider and effector
-            GetComponent<EdgeCollider2D>().enabled = false;
-            GetComponent<PlatformEffector2D>().enabled = false;
-            GetComponent<SpriteRenderer>().enabled = false;
+            //GetComponent<EdgeCollider2D>().enabled = false;
+            //GetComponent<PlatformEffector2D>().enabled = false;
+            //GetComponent<SpriteRenderer>().enabled = false;
 
             // Deactive collider and effector if gameobject has child
             if (transform.childCount > 0)
             {
-                if(transform.GetChild(0).GetComponent<Platform>()) // if child is platform
-                {
-                    transform.GetChild(0).GetComponent<EdgeCollider2D>().enabled = false;
-                    transform.GetChild(0).GetComponent<PlatformEffector2D>().enabled = false;
-                    transform.GetChild(0).GetComponent<SpriteRenderer>().enabled = false;
-                }
+                //if(transform.GetChild(0).GetComponent<Platform>()) // if child is platform
+                //{
+                //    transform.GetChild(0).GetComponent<EdgeCollider2D>().enabled = false;
+                //    transform.GetChild(0).GetComponent<PlatformEffector2D>().enabled = false;
+                //    transform.GetChild(0).GetComponent<SpriteRenderer>().enabled = false;
+                //}
 
                 // Destroy this platform if sound has finished
-                if (!GetComponent<AudioSource>().isPlaying && !transform.GetChild(0).GetComponent<AudioSource>().isPlaying)
-                    Destroy(gameObject);
+                if (!audioSource.isPlaying)
+                {
+                    objectPool = GetComponentInParent<ObjectPool>();
+
+                    if (objectPool != null)
+                    {
+                        //animator.SetBool("Active", false);
+                        objectPool.Despawn(this.gameObject);
+                    }
+                    else Debug.LogError("ERR");
+                    //else
+                    //    Destroy(gameObject);
+                }
             }
             else
             {
                 // Destroy this platform if sound has finished
-                if (!GetComponent<AudioSource>().isPlaying)
-                    Destroy(gameObject);
+                if (!audioSource.isPlaying)
+                {
+                    ObjectPool objectPool = GetComponentInParent<ObjectPool>();
+
+                    if (objectPool != null)
+                        objectPool.Despawn(this.gameObject);
+                }
             }
         }
     }
@@ -76,11 +113,11 @@ public class Platform : MonoBehaviour {
                 Rigid.velocity = Force;
 
                 // Play jump sound
-                GetComponent<AudioSource>().Play();
+                audioSource.Play();
 
                 // if gameobject has animation; Like spring, trampoline and etc...
-                if (GetComponent<Animator>())
-                    GetComponent<Animator>().SetBool("Active", true);
+                if (animator != null)
+                    animator.SetBool("Active", true);
 
                 // Check platform type
                 Platform_Type();
