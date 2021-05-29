@@ -17,18 +17,25 @@ public class Platform : MonoBehaviour {
     private ObjectPool objectPool;
 
     // Use this for initialization
+    private void Awake()
+    {
+        audioSource = GetComponent<AudioSource>();
+    }
+
     void Start()
     {
         Game_Controller = GameObject.Find("Game_Controller");
         platform_Generator = Game_Controller.GetComponent<Platform_Generator>();
-        audioSource = GetComponent<AudioSource>();
 
         // Set distance to destroy the platforms out of screen
         if (Game_Controller != null)
             Destroy_Distance = Game_Controller.GetComponent<Game_Controller>().Get_DestroyDistance();
 
-        animator = GetComponent<Animator>();
-        animator.keepAnimatorControllerStateOnDisable = true;
+        if(TryGetComponent(out animator)){
+            animator.keepAnimatorControllerStateOnDisable = true;
+
+        }
+        //animator = GetComponent<Animator>();
     }
 
     private void OnEnable()

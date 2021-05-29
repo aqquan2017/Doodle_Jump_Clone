@@ -34,7 +34,6 @@ public class Game_Controller : MonoBehaviour {
         // Initialize boundary 
         Camera_Pos = Camera.main.transform.position;
         Top_Left = Camera.main.ScreenToWorldPoint(new Vector3(0, 0, 0));
-        Debug.LogError(Top_Left);
 	}
 	
 	void FixedUpdate () 
