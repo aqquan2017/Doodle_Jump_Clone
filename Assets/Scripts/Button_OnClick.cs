@@ -33,7 +33,7 @@ public class Button_OnClick : MonoBehaviour {
 
     public void Ehsan_OnClick()
     {
-        Application.OpenURL("https://instagram.com/ehsanmhmdi/");
+        Application.OpenURL("https://itch.io/profile/gemdep");
     }
 
     public void Menu_OnClick()

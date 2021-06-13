@@ -36,7 +36,6 @@ public class Player_Controller : MonoBehaviour {
         Movement = Input.GetAxis("Horizontal") * Movement_Speed; 
 
 #elif UNITY_ANDROID
-        Debug.LogError("ANDROID");
         if (isTouch)
         {
             Movement = 0;

@@ -57,9 +57,16 @@ public class Game_Controller : MonoBehaviour {
                 Game_Over = true;
             }
         }
+        UpdateScore();
 	}
 
     void OnGUI()
+    {
+        //UpdateScore();
+
+    }
+
+    void UpdateScore()
     {
         // Set score
         Score = (int)(Max_Height * 50);
