@@ -5,22 +5,16 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class Game_Controller : MonoBehaviour {
-
-    private GameObject Player;
-
-    private float Max_Height = 0;
-    public Text Txt_Score;
-
-    private int Score;
-
-    private Vector3 Top_Left;
-    private Vector3 Camera_Pos;
-
-    private bool Game_Over = false;
-
     public Text Txt_GameOverScore;
     public Text Txt_GameOverHighsocre;
+    public Text Txt_Score;
 
+    private GameObject Player;
+    private float Max_Height = 0;
+    private int Score;
+    private Vector3 Top_Left;
+    private Vector3 Camera_Pos;
+    private bool Game_Over = false;
     private AudioSource audioSource;
 
 	void Awake () 
@@ -59,12 +53,6 @@ public class Game_Controller : MonoBehaviour {
         }
         UpdateScore();
 	}
-
-    void OnGUI()
-    {
-        //UpdateScore();
-
-    }
 
     void UpdateScore()
     {
